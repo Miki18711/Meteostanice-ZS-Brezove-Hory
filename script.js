@@ -36,12 +36,36 @@ function convertWindDirection(degrees, format) {
     return `${degrees}°`;
 }
 
+function convertSolarRadiation(radiation, unit) {
+    switch (unit) {
+        case 'w/m2':
+            return radiation; // W/m²
+        case 'btu':
+            return radiation * 0.3171; // W/m² na BTU/h
+        default:
+            return radiation;
+    }
+}
+
+function convertUvIndex(uvIndex, unit) {
+    switch (unit) {
+        case 'index':
+            return uvIndex; // UV index
+        case 'mw/cm2':
+            return uvIndex * 0.025; // UV index na mW/cm² (přibližná hodnota)
+        default:
+            return uvIndex;
+    }
+}
+
 function updateWeatherData(data) {
     const tempUnit = document.getElementById('tempSelect').value;
     const windUnit = document.getElementById('windSelect').value;
     const windDirFormat = document.getElementById('windDirSelect').value;
     const pressureUnit = document.getElementById('pressureSelect').value;
     const rainUnit = document.getElementById('rainSelect').value;
+    const solarUnit = document.getElementById('solarSelect').value;
+    const uvUnit = document.getElementById('uvSelect').value;
 
     document.getElementById('temperature').textContent = tempUnit === 'metric' 
         ? `${data.temperature} °C` 
@@ -50,11 +74,19 @@ function updateWeatherData(data) {
     document.getElementById('humidity').textContent = `${data.humidity} %`;
 
     const convertedWindSpeed = convertWindSpeed(data.windSpeed, windUnit);
-    document.getElementById('windSpeed').textContent = windUnit === 'kmh'
-        ? `${convertedWindSpeed.toFixed(2)} km/h`
-        : `${convertedWindSpeed.toFixed(2)} ${windUnit === 'metric' ? 'm/s' : 'mph'}`;
+    document.getElementById('windSpeed').textContent = `${convertedWindSpeed.toFixed(2)} ${windUnit === 'metric' ? 'm/s' : windUnit === 'imperial' ? 'mph' : 'km/h'}`;
 
     document.getElementById('windDirection').textContent = convertWindDirection(data.windDirection, windDirFormat);
+
+    const convertedSolarRadiation = convertSolarRadiation(data.solarRadiation, solarUnit);
+    document.getElementById('solarRadiation').textContent = solarUnit === 'w/m2'
+        ? `${convertedSolarRadiation.toFixed(2)} W/m²`
+        : `${convertedSolarRadiation.toFixed(2)} BTU/h`;
+
+    const convertedUvIndex = convertUvIndex(data.uvIndex, uvUnit);
+    document.getElementById('uvIndex').textContent = uvUnit === 'index'
+        ? `${convertedUvIndex} Index`
+        : `${convertedUvIndex.toFixed(2)} mW/cm²`;
 
     document.getElementById('windSpeedMetric').classList.toggle('active', windUnit === 'metric');
     document.getElementById('windSpeedImperial').classList.toggle('active', windUnit === 'imperial');
@@ -85,6 +117,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateWeatherData(data);
         });
         document.getElementById('rainSelect').addEventListener('change', async () => {
+            const data = await fetchWeatherData();
+            updateWeatherData(data);
+        });
+        document.getElementById('solarSelect').addEventListener('change', async () => {
+            const data = await fetchWeatherData();
+            updateWeatherData(data);
+        });
+        document.getElementById('uvSelect').addEventListener('change', async () => {
             const data = await fetchWeatherData();
             updateWeatherData(data);
         });
