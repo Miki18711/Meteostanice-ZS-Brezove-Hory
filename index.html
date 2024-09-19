@@ -6,50 +6,60 @@
     <title>Meteostanice ZŠ Březové Hory - Aktuální data</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to right, #00bcd4, #ffffff);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
             color: #333;
         }
         .weather-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            max-width: 700px;
+            max-width: 900px;
             margin: 40px auto;
-            background-color: #ffffff;
+            background-color: #fff;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             text-align: center;
+        }
+        .weather-header {
+            margin-bottom: 20px;
+            color: #00796b;
         }
         .weather-item {
             display: flex;
             justify-content: space-between;
-            font-size: 22px;
-            padding: 10px 0;
+            font-size: 24px;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
+        }
+        .weather-item:last-child {
+            border-bottom: none;
         }
         .weather-item span {
             font-weight: bold;
+            color: #333;
         }
         .controls {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            flex-wrap: wrap;
             gap: 20px;
             margin-top: 20px;
         }
         select {
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #ddd;
             background-color: #f9f9f9;
             font-size: 16px;
+            width: 100%;
         }
-        h1 {
-            color: #00796b;
-            margin-bottom: 20px;
+        .control-group {
+            flex: 1;
+            min-width: 150px;
         }
         .weather-images {
             display: flex;
@@ -63,17 +73,17 @@
             display: none;
         }
         .weather-images img.active {
-            display: inline;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
     <div class="weather-container">
-        <h1>Meteostanice ZŠ Březové Hory - Aktuální data</h1>
+        <h1 class="weather-header">Meteostanice ZŠ Březové Hory - Aktuální data</h1>
         <div class="weather-images">
             <img id="windSpeedMetric" src="https://via.placeholder.com/120x120?text=m/s" alt="m/s">
             <img id="windSpeedImperial" src="https://via.placeholder.com/120x120?text=mph" alt="mph">
-            <img id="windSpeedKmh" src="https://via.placeholder.com/120x120?text=km/h" alt="km/h">
+            <img id="windSpeedKmh" class="active" src="https://via.placeholder.com/120x120?text=km/h" alt="km/h">
             <img id="windDirectionDegrees" src="https://via.placeholder.com/120x120?text=Degrees" alt="Stupně">
             <img id="windDirectionCompass" src="https://via.placeholder.com/120x120?text=Compass" alt="Světové strany">
         </div>
@@ -101,30 +111,38 @@
             <span>Srážky:</span>
             <span id="rainfall">--</span>
         </div>
+        <div class="weather-item">
+            <span>Sluneční záření:</span>
+            <span id="solarRadiation">--</span>
+        </div>
+        <div class="weather-item">
+            <span>UV Index:</span>
+            <span id="uvIndex">--</span>
+        </div>
         <div class="controls">
-            <div>
+            <div class="control-group">
                 <label for="tempSelect">Jednotky teploty:</label>
                 <select id="tempSelect">
                     <option value="metric">Celsius (°C)</option>
                     <option value="imperial">Fahrenheit (°F)</option>
                 </select>
             </div>
-            <div>
+            <div class="control-group">
                 <label for="windSelect">Jednotky větru:</label>
                 <select id="windSelect">
+                    <option value="kmh">km/h</option>
                     <option value="metric">m/s</option>
                     <option value="imperial">mph</option>
-                    <option value="kmh">km/h</option>
                 </select>
             </div>
-            <div>
+            <div class="control-group">
                 <label for="windDirSelect">Směr větru:</label>
                 <select id="windDirSelect">
                     <option value="degrees">Stupně</option>
                     <option value="compass">Světové strany</option>
                 </select>
             </div>
-            <div>
+            <div class="control-group">
                 <label for="pressureSelect">Jednotky tlaku:</label>
                 <select id="pressureSelect">
                     <option value="hPa">hPa</option>
@@ -132,11 +150,25 @@
                     <option value="inHg">inHg</option>
                 </select>
             </div>
-            <div>
+            <div class="control-group">
                 <label for="rainSelect">Jednotky srážek:</label>
                 <select id="rainSelect">
                     <option value="mm">mm</option>
                     <option value="in">in</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="solarSelect">Jednotky slunečního záření:</label>
+                <select id="solarSelect">
+                    <option value="w/m2">W/m²</option>
+                    <option value="btu">BTU/h</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="uvSelect">Jednotky UV indexu:</label>
+                <select id="uvSelect">
+                    <option value="index">Index</option>
+                    <option value="mw/cm2">mW/cm²</option>
                 </select>
             </div>
         </div>
