@@ -12,7 +12,7 @@ async function fetchWeatherData() {
 function convertWindSpeed(speed, unit) {
     switch (unit) {
         case 'metric':
-            return speed; // m/s
+            return speed * 3.6; // m/s na km/h
         case 'imperial':
             return speed * 2.237; // m/s na mph
         case 'kmh':
@@ -36,26 +36,8 @@ function convertWindDirection(degrees, format) {
     return `${degrees}°`;
 }
 
-function convertSolarRadiation(radiation, unit) {
-    switch (unit) {
-        case 'w/m2':
-            return radiation;
-        case 'btu':
-            return radiation * 0.3171;
-        default:
-            return radiation;
-    }
-}
-
-function convertUvIndex(uvIndex, unit) {
-    switch (unit) {
-        case 'index':
-            return uvIndex;
-        case 'mw/cm2':
-            return uvIndex * 0.025;
-        default:
-            return uvIndex;
-    }
+function convertUvIndexToMw(uvIndex) {
+    return uvIndex * 25; // 1 UV stupeň = 25 mW/m²
 }
 
 function updateWeatherData(data) {
@@ -78,17 +60,13 @@ function updateWeatherData(data) {
 
     document.getElementById('windDirection').textContent = convertWindDirection(data.windDirection, windDirFormat);
 
-    const convertedSolarRadiation = convertSolarRadiation(data.solarRadiation, solarUnit);
-    document.getElementById('solarRadiation').textContent = solarUnit === 'w/m2'
-        ? `${convertedSolarRadiation.toFixed(2)} W/m²`
-        : `${convertedSolarRadiation.toFixed(2)} BTU/h`;
+    document.getElementById('pressure').textContent = `${data.pressure} ${pressureUnit}`;
+    document.getElementById('rainfall').textContent = `${data.rainfall} ${rainUnit}`;
+    document.getElementById('solarRadiation').textContent = `${data.solarRadiation} ${solarUnit === 'watt' ? 'W/m²' : 'mW/m²'}`;
 
-    const convertedUvIndex = convertUvIndex(data.uvIndex, uvUnit);
-    document.getElementById('uvIndex').textContent = uvUnit === 'index'
-        ? `${convertedUvIndex} Index`
-        : `${convertedUvIndex.toFixed(2)} mW/cm²`;
+    const uvIndex = uvUnit === 'index' ? data.uvIndex : convertUvIndexToMw(data.uvIndex);
+    document.getElementById('uvIndex').textContent = `${uvIndex} ${uvUnit === 'index' ? 'UV Index' : 'mW/m²'}`;
 
-    // Aktualizace aktivního stavu u výběrů jednotek (pro vizuální efekt v budoucnu)
     document.getElementById('windSpeedMetric').classList.toggle('active', windUnit === 'metric');
     document.getElementById('windSpeedImperial').classList.toggle('active', windUnit === 'imperial');
     document.getElementById('windSpeedKmh').classList.toggle('active', windUnit === 'kmh');
