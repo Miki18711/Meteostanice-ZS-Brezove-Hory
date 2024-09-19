@@ -39,9 +39,9 @@ function convertWindDirection(degrees, format) {
 function convertSolarRadiation(radiation, unit) {
     switch (unit) {
         case 'w/m2':
-            return radiation; // W/m²
+            return radiation;
         case 'btu':
-            return radiation * 0.3171; // W/m² na BTU/h
+            return radiation * 0.3171;
         default:
             return radiation;
     }
@@ -50,9 +50,9 @@ function convertSolarRadiation(radiation, unit) {
 function convertUvIndex(uvIndex, unit) {
     switch (unit) {
         case 'index':
-            return uvIndex; // UV index
+            return uvIndex;
         case 'mw/cm2':
-            return uvIndex * 0.025; // UV index na mW/cm² (přibližná hodnota)
+            return uvIndex * 0.025;
         default:
             return uvIndex;
     }
@@ -69,12 +69,12 @@ function updateWeatherData(data) {
 
     document.getElementById('temperature').textContent = tempUnit === 'metric' 
         ? `${data.temperature} °C` 
-        : `${(data.temperature * 9/5) + 32} °F`; // Převod teploty na °F
+        : `${(data.temperature * 9/5) + 32} °F`;
 
     document.getElementById('humidity').textContent = `${data.humidity} %`;
 
     const convertedWindSpeed = convertWindSpeed(data.windSpeed, windUnit);
-    document.getElementById('windSpeed').textContent = `${convertedWindSpeed.toFixed(2)} ${windUnit === 'metric' ? 'm/s' : windUnit === 'imperial' ? 'mph' : 'km/h'}`;
+    document.getElementById('windSpeed').textContent = `${convertedWindSpeed.toFixed(2)} ${windUnit === 'kmh' ? 'km/h' : windUnit === 'metric' ? 'm/s' : 'mph'}`;
 
     document.getElementById('windDirection').textContent = convertWindDirection(data.windDirection, windDirFormat);
 
@@ -88,6 +88,7 @@ function updateWeatherData(data) {
         ? `${convertedUvIndex} Index`
         : `${convertedUvIndex.toFixed(2)} mW/cm²`;
 
+    // Aktualizace aktivního stavu u výběrů jednotek (pro vizuální efekt v budoucnu)
     document.getElementById('windSpeedMetric').classList.toggle('active', windUnit === 'metric');
     document.getElementById('windSpeedImperial').classList.toggle('active', windUnit === 'imperial');
     document.getElementById('windSpeedKmh').classList.toggle('active', windUnit === 'kmh');
