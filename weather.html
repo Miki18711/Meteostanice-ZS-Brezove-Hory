@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meteostanice Staré Podlesí - Počasí</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #00bcd4, #ffffff);
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            padding: 50px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-right: 50px;
+        }
+        h1 {
+            color: #00796b;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        /* Počasí stylizace Garni */
+        .weather-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .weather-item {
+            background-color: #e0f7fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 45%;
+            text-align: center;
+        }
+        .weather-item h2 {
+            font-size: 3em;
+            color: #00796b;
+            margin: 10px 0;
+        }
+        .weather-item p {
+            font-size: 1.5em;
+            margin: 10px 0;
+            color: #004d40;
+        }
+        .weather-icon {
+            font-size: 4em;
+            color: #00796b;
+            margin-bottom: 20px;
+        }
+        /* Přepínač jednotek */
+        .unit-switch {
+            margin: 20px 0;
+        }
+        .unit-switch label {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        /* Mapa webu */
+        .sitemap {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            align-self: flex-start;
+        }
+        .sitemap h3 {
+            color: #00796b;
+        }
+        .sitemap a {
+            display: block;
+            color: #ffffff;
+            background-color: #00796b;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .sitemap a:hover {
+            background-color: #004d40;
+        }
+        @media (max-width: 600px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .container {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .sitemap {
+                width: 100%;
+            }
+            .weather-container {
+                flex-direction: column;
+            }
+            .weather-item {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+    <script>
+        function updateWeather(unit) {
+            const temperatureElement = document.getElementById('temperature');
+            const humidityElement = document.getElementById('humidity');
+            const pressureElement = document.getElementById('pressure');
+            const windSpeedElement = document.getElementById('wind-speed');
+
+            let temperature = 23; // Původní teplota v °C
+            let humidity = 65; // Vlhkost v %
+            let pressure = 1012; // Tlak v hPa
+            let windSpeed = 12; // Rychlost větru v km/h
+
+            if (unit === 'F') {
+                temperature = (temperature * 9/5) + 32; // °C na °F
+                temperatureElement.innerHTML = `${temperature.toFixed(1)} °F`;
+            } else {
+                temperatureElement.innerHTML = `${temperature} °C`;
+            }
+
+            humidityElement.innerHTML = unit === 'g/m³' ? `${(humidity * 0.0133).toFixed(1)} g/m³` : `${humidity} %`;
+
+            pressureElement.innerHTML = unit === 'mmHg' ? `${(pressure * 0.750062).toFixed(1)} mmHg` : `${pressure} hPa`;
+
+            windSpeedElement.innerHTML = unit === 'mph' ? `${(windSpeed * 0.621371).toFixed(1)} mph` : `${windSpeed} km/h`;
+        }
+
+        window.onload = function() {
+            updateWeather('C'); // Nastavení výchozích jednotek
+        };
+    </script>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container">
+            <h1>Aktuální Počasí</h1>
+            <div class="unit-switch">
+                <label>Teplota:</label>
+                <select onchange="updateWeather(this.value)">
+                    <option value="C">Celsius</option>
+                    <option value="F">Fahrenheit</option>
+                </select>
+                <label>Vlhkost:</label>
+                <select onchange="updateWeather(this.value)">
+                    <option value="%">%</option>
+                    <option value="g/m³">g/m³</option>
+                </select>
+                <label>Tlak:</label>
+                <select onchange="updateWeather(this.value)">
+                    <option value="hPa">hPa</option>
+                    <option value="mmHg">mmHg</option>
+                </select>
+                <label>Rychlost větru:</label>
+                <select onchange="updateWeather(this.value)">
+                    <option value="km/h">km/h</option>
+                    <option value="mph">mph</option>
+                </select>
+            </div>
+
+            <div class="weather-container">
+                <!-- Teplota -->
+                <div class="weather-item">
+                    <div class="weather-icon">🌡️</div>
+                    <h2 id="temperature"></h2>
+                    <p>Teplota vzduchu</p>
+                </div>
+                <!-- Vlhkost -->
+                <div class="weather-item">
+                    <div class="weather-icon">💧</div>
+                    <h2 id="humidity"></h2>
+                    <p>Relativní vlhkost</p>
+                </div>
+            </div>
+
+            <div class="weather-container">
+                <!-- Tlak vzduchu -->
+                <div class="weather-item">
+                    <div class="weather-icon">🌬️</div>
+                    <h2 id="pressure"></h2>
+                    <p>Tlak vzduchu</p>
+                </div>
+                <!-- Rychlost větru -->
+                <div class="weather-item">
+                    <div class="weather-icon">💨</div>
+                    <h2 id="wind-speed"></h2>
+                    <p>Rychlost větru</p>
+                </div>
+            </div>
+
+            <div class="weather-container">
+                <!-- Srážky -->
+                <div class="weather-item">
+                    <div class="weather-icon">🌧️</div>
+                    <h2>2 mm</h2>
+                    <p>Srážky</p>
+                </div>
+                <!-- Stav počasí -->
+                <div class="weather-item">
+                    <div class="weather-icon">⛅</div>
+                    <h2>Polojasno</h2>
+                    <p>Aktuální stav</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa webu (sitemap) -->
+        <div class="sitemap">
+            <h3>Mapa stránek</h3>
+            <a href="index.html">Domů</a>
+            <a href="about.html">O meteostanici</a>
+            <a href="records.html">Rekordy</a>
+            <a href="map.html">Mapa</a>
+            <a href="weather.html">Počasí</a>
+            <a href="fotogalerie.html">Fotogalerie</a>
+        </div>
+    </div>
+</body>
+</html>
